@@ -22,7 +22,6 @@ class Car(models.Model):
     description = models.TextField(
         help_text="Описание автомобиля",
         verbose_name="Описание",
-        blank=True
         )
     create_at = models.DateTimeField(
         auto_now_add=True,
