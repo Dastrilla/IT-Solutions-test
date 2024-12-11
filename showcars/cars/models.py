@@ -39,6 +39,9 @@ class Car(models.Model):
     def __str__(self):
         return self.model
     
+    class Meta:
+        verbose_name = "Автомобиль"
+        verbose_name_plural = "Автомобили"
 
 class Comment(models.Model):
     content = models.TextField(
@@ -61,3 +64,7 @@ class Comment(models.Model):
         related_name="comments",
         verbose_name="Автор записи"
         )
+    
+    class Meta:
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
