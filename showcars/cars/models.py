@@ -14,3 +14,10 @@ class Car(models.Model):
 
     def __str__(self):
         return self.model
+    
+
+class Comment(models.Model):
+    content = models.TextField(help_text="Напишите свой комментарий", verbose_name="Текст комментария")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания комментария")
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name="comments", verbose_name="Машина")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments", verbose_name="Автор записи")
