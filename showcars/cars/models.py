@@ -14,12 +14,15 @@ class Car(models.Model):
         help_text= "Модель автомобиля",
         verbose_name="Модель"
         )
-    year = models.IntegerField(
-        verbose_name="Год"
+    year = models.CharField(
+        max_length=4,
+        verbose_name="Год",
+        blank=True
         )
     description = models.TextField(
         help_text="Описание автомобиля",
-        verbose_name="Описание"
+        verbose_name="Описание",
+        blank=True
         )
     create_at = models.DateTimeField(
         auto_now_add=True,
