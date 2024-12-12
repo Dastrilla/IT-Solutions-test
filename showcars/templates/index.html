@@ -3,7 +3,7 @@
 {% block header %}Последние обновление на сайте{% endblock %}
 {% block content %}
 
-        {% for car in cars %}
+        {% for car in page %}
         <h3>
                 Автор: {{ car.author.get_full_name }}, дата публикации: {{ car.create_at|date:"d M Y" }}, дата обновления: {{ car.update_at|date:"d M Y" }}
         </h3>
@@ -11,7 +11,9 @@
         <p>Модель: {{ car.model|linebreaksbr }}</p>
         <p>Год выпуска: {{ car.year|linebreaksbr }}</p>
         <p>Описание: {{ car.description|linebreaksbr }}</p>
-        {% if not forloop.last %}<hr>{% endif %}
         {% endfor %}
+        {% if page.has_other_pages %}
+        {% include "paginator.html" with items=page paginotr=paginator %}
+        {% endif %}
 
 {% endblock %}
