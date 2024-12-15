@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'cars.apps.CarsConfig',
     'users.apps.UsersConfig',
     'django.contrib.admin',

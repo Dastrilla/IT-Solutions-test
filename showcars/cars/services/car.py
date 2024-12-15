@@ -1,9 +1,16 @@
+
 from cars.forms import CarForm, CommentForm
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from datetime import datetime as dt
 
-from cars.models import Car
+from cars.models import Car, Comment
+from cars.serializers import CarSerializer, CommentSerializer
+from .permissions import IsAuthorOrREadOnly
 
 
 User = get_user_model()
@@ -16,7 +23,6 @@ def index(request):
     return render(request,
                 "index.html",
                 {"page":page, 'paginator':paginator})
-
 
 def new_car(request):
     context = {"title":"Новая публикация", "button":"Опубликовать"}
@@ -54,6 +60,8 @@ def car_edit(request, username, car_id):
     if not form.is_valid() or request.method != "POST":
         return render(request, "new_car.html", {"context":context, "form":form, "car":car})
     form.save()
+    car.update_at = dt.now()
+    car.save()
     return redirect("car", username = username, car_id = car_id)
 
 def delete_car(request, username, car_id):
@@ -73,3 +81,24 @@ def add_comment(request, username, car_id):
     comment.author = request.user
     comment.save()
     return redirect("car", username=username, car_id = car_id)
+
+class CarAPIList(generics.ListCreateAPIView):
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticatedOrReadOnly,)   
+
+    def perform_create(self, serializer):
+        serializer.save(author = self.request.user)
+
+
+class CarAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer
+    permission_classes = (IsAuthorOrREadOnly,)
+
+
+class CommentAPIList(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
