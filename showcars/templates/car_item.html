@@ -1,0 +1,40 @@
+<div class="card mb-3 mt-1 shadow-sm">
+    <div class="card-body">
+        <p class="card-text">
+            <a name="car_{{ car.id }}" href="{% url 'car' car.author.username car.id%}" style="color: black;">
+                <strong class="d-block text-gray-dark">{{ car.make }} {{car.model}}</strong>
+            </a>
+            <p>Производитель: {{ car.make|linebreaksbr }}</p>
+            <p>Модель: {{ car.model|linebreaksbr }}</p>
+            <p>Год выпуска: {{ car.year|linebreaksbr }}</p>
+            <p>Описание: {{ car.description|linebreaksbr }}</p>
+        </p>
+                
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group ">
+                <a class="btn btn-sm text-muted" href="{% url 'car' car.author.username car.id %}"
+                        role="button">
+                    {% if car.comments.exists %}
+                    {{ car.comments.count }} комментариев
+                    {% else%}
+                    Добавить комментарий
+                    {% endif %}
+                </a>
+                    
+                 {% if user == car.author %}
+                 <a class="btn btn-sm text-muted" href="{% url 'car_edit' car.author.username car.id %}"
+                        role="button">
+                        Редактировать
+                </a>
+                
+                <a class="btn btn-sm text-muted" href="{% url 'car_delete' car.author.username car.id %}"
+                role="button">
+                Удалить
+                </a>
+                {% endif %}
+            </div>
+            
+            <small class="text-muted">{{ car.pub_date }}</small>
+        </div>
+    </div>
+</div>

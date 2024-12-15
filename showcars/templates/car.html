@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+<main role="main" class="container"></main>
+    <div class="row">
+            <div class="col-md-3 mb-3 mt-1">
+                    <div class="card">
+                            <div class="card-body">
+                                    <div class="h2">
+                                        {{profile.get_full_name}}
+                                    </div>
+                                    <div class="h3 text-muted">
+                                         @{{profile.username}}
+                                    </div>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                            <div class="h6 text-muted">
+                                                Машин: {{profile.cars.count}}
+                                            </div>
+                                    </li>
+                            </ul>
+                    </div>
+            </div>
+        <div class="col-md-9">
+                <div class="card mb-3 mt-1 shadow-sm">
+                        <div class="card-body">
+                                <p class="card-text">
+                                        <p>Производитель: {{ car.make|linebreaksbr }}</p>
+                                        <p>Модель: {{ car.model|linebreaksbr }}</p>
+                                        <p>Год выпуска: {{ car.year|linebreaksbr }}</p>
+                                        <p>Описание: {{ car.description|linebreaksbr }}</p>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group ">
+                                                {% if user.username == profile.username %}
+                                                <a class="btn btn-sm text-muted" href="{% url 'car_edit' profile.username car.id %}" role="button">Редактировать</a>
+                                                <a class="btn btn-sm text-muted" href="{% url 'car_delete' car.author.username car.id %}"role="button">Удалить</a>
+                                                {% endif %}
+                                        </div>
+                                        <small class="text-muted">{{car.create_at}}</small>
+                                </div>
+                        </div>
+                </div>
+     </div>
+    </div>
+</main>
+{% endblock %}

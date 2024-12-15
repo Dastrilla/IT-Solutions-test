@@ -1,20 +1,25 @@
-from django.shortcuts import render
-from django.core.paginator import Paginator
 from .services import car
 from django.contrib.auth.decorators import login_required
 
-from .models import Car
-
 # Create your views here.
 def index(request):
-    car_list = Car.objects.order_by('-create_at').all()
-    paginator = Paginator(car_list, 10)
-    page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)
-    return render(request,
-                "index.html",
-                {"page":page, 'paginator':paginator})
+    return car.index(request)
 
 @login_required(login_url='login')
 def new_car(request):
     return car.new_car(request)
+
+def car_view(request, username, car_id):
+    return car.car_view(request, username, car_id)
+
+@login_required(login_url='login')
+def car_edit(request, username, car_id):
+    return car.car_edit(request, username, car_id)
+
+@login_required(login_url='login')
+def car_delete(request, username, car_id):
+    return car.delete_car(request, username, car_id)
+
+@login_required(login_url='login')
+def add_comment(request, username, car_id):
+    return car.add_comment(request, username, car_id)
