@@ -37,9 +37,13 @@ def car_view(request, username, car_id):
                 .select_related("author")
                 .filter(author__username = profile.username)
                 )
-    context = {"car": car, "profile": profile}
+    
+    form = CommentForm()
+    items = car.comments.order_by('-created_at').all()
 
-    return render(request, "car.html", context)
+    return render(request, "car.html",
+                  {"car": car,"profile": profile,
+                    "form":form, "items":items})
 
 def car_edit(request, username, car_id):
     context = {"title":"Редактирование записи", "button":"Сохранить"}
