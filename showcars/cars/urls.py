@@ -12,5 +12,5 @@ urlpatterns = [
     path('api/drf-auth/', include('rest_framework.urls')),
     path('api/cars/', CarAPIList.as_view()),
     path('api/cars/<int:pk>', CarAPIDetailView.as_view()),
-    path('api/cars/<int:pk>/comments', CommentAPIList.as_view()),
+    path('api/cars/<int:pk>/comments', CommentAPIView.as_view()),
 ]

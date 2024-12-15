@@ -1,11 +1,12 @@
 
 from cars.forms import CarForm, CommentForm
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth import get_user_model
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from datetime import datetime as dt
 
 from cars.models import Car, Comment
@@ -85,7 +86,6 @@ def add_comment(request, username, car_id):
 class CarAPIList(generics.ListCreateAPIView):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
-    authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticatedOrReadOnly,)   
 
     def perform_create(self, serializer):
@@ -98,7 +98,17 @@ class CarAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthorOrREadOnly,)
 
 
-class CommentAPIList(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class CommentAPIView(APIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)     
+
+    def get(self, request, pk):
+        comments = Comment.objects.all().filter(car__id = pk)
+        return Response({'comments':CommentSerializer(comments, many=True).data})
+
+    def post(self, request, pk):
+        comment_new = Comment.objects.create(
+            content = request.data['content'],
+            author = request.user,
+            car_id = pk
+        )
+        return Response({'comments':CommentSerializer(comment_new).data})
